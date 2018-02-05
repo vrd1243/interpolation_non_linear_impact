@@ -17,12 +17,16 @@ def average_nearest(time, data, sampling_rate=0.1):
     ts = time[0];
 
     for i in range(samples-1):
-        if ts > time[nearest+1]:
+        while ts > time[nearest+1]:
             nearest += 1;
 	
         even_time[i] = ts;
-        slope =  (data[nearest+1] - data[nearest]) / (time[nearest+1] - time[nearest]);
+        if time[nearest+1] == time[nearest]:
+            slope = 0
+        else:
+            slope =  (data[nearest+1] - data[nearest]) / (time[nearest+1] - time[nearest]);
         even_series[i] = slope * (ts - time[nearest]) + data[nearest];
+        print(even_series[i], data[nearest], data[nearest+1], time[nearest], time[nearest+1], ts, slope)
         ts += sampling_rate;
 
     return even_time, even_series;
