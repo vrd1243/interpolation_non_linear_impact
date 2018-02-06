@@ -26,7 +26,6 @@ def average_nearest(time, data, sampling_rate=0.1):
         else:
             slope =  (data[nearest+1] - data[nearest]) / (time[nearest+1] - time[nearest]);
         even_series[i] = slope * (ts - time[nearest]) + data[nearest];
-        print(even_series[i], data[nearest], data[nearest+1], time[nearest], time[nearest+1], ts, slope)
         ts += sampling_rate;
 
     return even_time, even_series;
@@ -44,12 +43,16 @@ def pick_nearest(time, data, sampling_rate=0.1):
     ts = time[0];
 
     for i in range(samples-1):
+        while ts > time[nearest+1]:
+            nearest += 1;
+
         if nearest < len(time) - 1:
             if abs(ts - time[nearest]) > abs(ts - time[nearest+1]):
-                nearest += 1;
+                even_series[i] = data[nearest];
+            else:
+                even_series[i] = data[nearest+1];
 
         even_time[i] = ts;
-        even_series[i] = data[nearest];
         ts += sampling_rate;
 
     return even_time, even_series;

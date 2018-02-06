@@ -5,7 +5,7 @@ import nonlinear_drop
 import interpolate
 import ordinal_TSA as ot
 
-uneven_intvl=0.005
+uneven_intvl=0.5
 even_intvl=1/20
 
 arr = lorenz.get_lorenz(tmax=67748,n=67748*20);
@@ -24,17 +24,12 @@ time2, even_series2 = interpolate.average_nearest(uneven_time, uneven_series, sa
 
 last_time = -1
 
-#print(even_series[:last_time])
-#print(uneven_series[:last_time])
-#print(even_series1[:last_time])
-#print(even_series2[:last_time])
-
 plt.figure()
 plt.plot(time2[:last_time], even_series2[:last_time], label='linear');
-plt.plot(time1[:last_time], even_series1[:last_time], label='nearest');
-plt.legend();
+plt.plot(time1[:last_time], even_series1[:last_time], '.', label='nearest');
 plt.plot(uneven_time[:last_time], uneven_series[:last_time], '*', label='uneven')
-plt.plot(even_time[:last_time], even_series[:last_time], '-', label='original')
+plt.legend();
+#plt.plot(even_time[:last_time], even_series[:last_time], '-', label='original')
 plt.savefig('series.png');
 
 window = 1000
@@ -62,7 +57,7 @@ for i in range(len1):
 for i in range(len2):
   wpe2[i] = np.asarray(ot.permutation_entropy(even_series2[i*window:(i+1)*window].reshape(-1,1),dim=4,step=1,w=1));
 
-symb='-'
+symb='.'
 plt.figure();
 plt.plot(wpe_time0, wpe0, symb, label='original')
 plt.plot(wpe_time1, wpe1, symb, label='nearest')
