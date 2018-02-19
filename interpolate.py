@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 path = 'file.txt'
 
-def average_nearest(time, data, sampling_rate=0.1):
+def average_nearest(time, data, sampling_rate=0.1, start_time=-1):
     
     span = time[-1] - time[0];
     samples = int(np.ceil(span/sampling_rate));
@@ -14,12 +14,15 @@ def average_nearest(time, data, sampling_rate=0.1):
     even_time = np.zeros(samples);
 
     nearest = 0;
-    ts = time[0];
-
+    
+    if start_time == -1 or start_time < time[0]:
+        start_time = time[0];
+    
+    ts = start_time;
     for i in range(samples-1):
         while ts > time[nearest+1]:
             nearest += 1;
-	
+        
         even_time[i] = ts;
         if time[nearest+1] == time[nearest]:
             slope = 0
@@ -31,7 +34,7 @@ def average_nearest(time, data, sampling_rate=0.1):
     return even_time, even_series;
 
 
-def pick_nearest(time, data, sampling_rate=0.1):
+def pick_nearest(time, data, sampling_rate=0.1, start_time=-1):
     
     span = time[-1] - time[0];
     samples = int(np.ceil(span/sampling_rate));
@@ -40,7 +43,11 @@ def pick_nearest(time, data, sampling_rate=0.1):
     even_time = np.zeros(samples);
 
     nearest = 0;
-    ts = time[0];
+
+    if start_time == -1 or start_time < time[0]:
+        start_time = time[0];
+    
+    ts = start_time;
 
     for i in range(samples-1):
         while ts > time[nearest+1]:
@@ -48,9 +55,9 @@ def pick_nearest(time, data, sampling_rate=0.1):
 
         if nearest < len(time) - 1:
             if abs(ts - time[nearest]) > abs(ts - time[nearest+1]):
-                even_series[i] = data[nearest];
-            else:
                 even_series[i] = data[nearest+1];
+            else:
+                even_series[i] = data[nearest];
 
         even_time[i] = ts;
         ts += sampling_rate;
