@@ -38,6 +38,7 @@ dim = 4
 len0 = int(len(even_series) / window)
 len1 = int(len(even_series1) / window)
 len2 = int(len(even_series2) / window)
+len3 = int(len(uneven_series) / window)
 
 wpe0 = np.zeros(len0);
 wpe_time0 = even_time[np.arange(0,len(even_series),window)[:-1]];
@@ -48,6 +49,9 @@ wpe_time1 = time1[np.arange(0,len(even_series1),window)[:-1]];
 wpe2 = np.zeros(len2);
 wpe_time2 = time2[np.arange(0,len(even_series2),window)[:-1]];
 
+wpe3 = np.zeros(len3);
+#wpe_time3 = time2[np.arange(0,len(uneven_series),window)[:-1]];
+
 for i in range(len0):
   wpe0[i] = np.asarray(ot.permutation_entropy(even_series[i*window:(i+1)*window].reshape(-1,1),dim=4,step=1,w=1));
 
@@ -57,10 +61,16 @@ for i in range(len1):
 for i in range(len2):
   wpe2[i] = np.asarray(ot.permutation_entropy(even_series2[i*window:(i+1)*window].reshape(-1,1),dim=4,step=1,w=1));
 
+for i in range(len3):
+  wpe3[i] = np.asarray(ot.permutation_entropy(uneven_series[i*window:(i+1)*window].reshape(-1,1),dim=4,step=1,w=1));
+
 symb='.'
 plt.figure();
 plt.plot(wpe_time0, wpe0, symb, label='original')
 plt.plot(wpe_time1, wpe1, symb, label='nearest')
 plt.plot(wpe_time2, wpe2, symb, label='linear')
+plt.plot(uneven_time, wpe3, symb, label='uneven');
 plt.legend();
 plt.savefig('wpe.png');
+
+plt.figure();
